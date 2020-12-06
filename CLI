@@ -1,0 +1,50 @@
+import java.util.Scanner;
+public class CLI {
+	private Scanner in;
+	boolean exit, loggedIn = false;
+	int command;
+	public CLI() {
+		exit = false;
+		in = new Scanner(System.in);
+	}
+	public void runCLI() {
+		while(!exit) {
+			if(loggedIn == false) {
+				System.out.println("1) Login, 2) Create Account, 3) Exit");
+				command = in.nextInt();
+				if(command == 1) {
+					//Login to existing user
+					loggedIn = true;
+				} else if(command == 2) {
+					//Create new user
+				} else if(command == 3) {
+					exit = true;
+				}
+			} else if(loggedIn == true) {
+				System.out.println("1) Property List, 2) Property Details, 3) Manage Properties 4) Make Payment, 5) Payment History, 6) Logout");
+				command = in.nextInt();
+				if(command == 1) {
+					//List off all the properties owned
+				} else if(command == 2) {
+					//Gets details of properties
+				} else if(command == 3) {
+					System.out.println("1) Register Property, 2) Remove Property");
+					command = in.nextInt();
+					if(command == 1) {
+						//Ask for property details
+						//Register the property
+					} else if(command == 2) {
+						//Ask for property details
+						//Remove the property
+					}
+				} else if(command == 4) {
+					//Make a tax payment
+				} else if(command == 5) {
+					//Prints off payment history
+				} else if(command == 6) {
+					loggedIn = false;
+				}
+			}
+		}
+	}
+}
