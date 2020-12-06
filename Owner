@@ -1,0 +1,49 @@
+import java.util.ArrayList;
+import java.io.*;
+public class Owner {
+    private String ownerid, password;
+    private ArrayList<Property> properties = new ArrayList<>();
+    public Owner(String ownerid, String password) {
+        // TODO Auto-generated constructor stub
+        this.ownerid = ownerid;
+        this.password = password;
+        File file = new File(ownerid+".csv");
+    }
+
+    String getOwnerId() {
+        return ownerid;
+    }
+
+    void setOwnerId(String newId) {
+        this.ownerid = newId;
+    }
+
+    void resetPassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    String getPassword() {
+        return password;
+    }
+
+    void assignAProperty(Property propertyOwned){
+        try{
+            properties.add(propertyOwned);
+            FileWriter File = new FileWriter(ownerid+".csv",true);
+            BufferedWriter Buffer = new BufferedWriter(File);
+            PrintWriter Print = new PrintWriter(Buffer);
+            Print.println(propertyOwned.toString());
+            Print.flush();
+            Print.close();
+        }
+        catch (Exception E){
+            System.out.println("Error");
+        }
+    }
+
+    void registerNewProperty(String owner, String address, String eircode, double value, String loCat, boolean ppr) {
+        Property newProperty = new Property(owner, address, eircode, value, loCat, ppr);
+        properties.add(newProperty);
+    }
+
+}
