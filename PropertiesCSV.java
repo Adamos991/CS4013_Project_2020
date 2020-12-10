@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.*;
 public class PropertiesCSV {
+    /** A method which creates a CSV files of properties */
     void createARegistryOfProperties(){
         try{
             File f = new File("RegisteredProperties.csv");
@@ -35,7 +36,8 @@ public class PropertiesCSV {
             System.out.println("Error");
         }
     }
-
+    
+    /** A mutator method which adds a property to the CSV file */
     void addPropertyToCSV(String Owner, String address, String eircode, double value, String loCat, boolean ppr, int lastPayment){
         String ppry= String.valueOf(ppr);
         String lastPaymenty= String.valueOf(lastPayment);
@@ -43,7 +45,7 @@ public class PropertiesCSV {
         String[] values = address.split(",");
         String addressy = "";
         for(int i = 0; i < values.length; i++) {
-        	addressy += values[i];
+            addressy += values[i];
         }
         try{
             FileWriter File = new FileWriter("RegisteredProperties.csv",true);
@@ -57,6 +59,7 @@ public class PropertiesCSV {
         }
     }
     
+    /** A mutator method which removes the a property from the CSV */
     void removeAProperty(String eircode){
         File inputFile = new File("RegisteredProperties.csv");
         String inputFile1 = "RegisteredProperties.csv";
