@@ -61,14 +61,16 @@ public class Owner {
     }
     
     /** A method that makes a payment for the owner */
-    void makePayment(int b) {
+    boolean makePayment(int b) {
         if(properties.get(b - 1).getYearOfLastPayment() != LocalDate.now().getYear()) {
             Payment payment = new Payment(properties.get(b - 1), properties.get(b - 1).getYearOfLastPayment());
             payment.makePayment();
             payments.add(payment);
             properties.get(b - 1).addToPropertyPayments(payment);
             properties.get(b - 1).setYearOfLastPayment(payment.getYear());
+            return true;
         }
+        return false;
     }
     
     /** An accessor that shows how much is to be paid */
