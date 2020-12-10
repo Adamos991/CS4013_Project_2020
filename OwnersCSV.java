@@ -3,7 +3,8 @@ import java.io.PrintWriter;
 import java.io.*;
 public class OwnersCSV
 {
-	void createARegistryOfOwners(){
+    /** A method which creates a registry of owners*/
+    void createARegistryOfOwners(){
         try{
             File f = new File("OwnerAccounts.csv");
             if (f.exists()){
@@ -24,7 +25,8 @@ public class OwnersCSV
             System.out.println("Error");
         }
     }
-    
+
+    /** A mutator which adds an owner to a CSV file */
     void addOwnerToCSV(String ownerid, String password){       
         try{
             FileWriter File = new FileWriter("OwnerAccounts.csv",true);
@@ -38,6 +40,7 @@ public class OwnersCSV
         }
     }
     
+    /** A mutator which removes an owner from the CSV files */
     void removeAnOwner(String owner){
         File inputFile = new File("OwnersAccounts.csv");
         String inputFile1 = "Owners.Accounts.csv";
@@ -68,5 +71,5 @@ public class OwnersCSV
             System.out.println("IO Exception");
         }
     }
-    
+
 }
