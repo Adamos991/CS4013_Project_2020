@@ -1,5 +1,3 @@
-import java.util.*;
-import java.io.File;
 import java.time.LocalDate;
 import java.io.*;
 public class Owner {
@@ -10,7 +8,6 @@ public class Owner {
     private boolean propertiesLoaded = false;
     /**A constructor for the owner */
     public Owner(String ownerid, String password) {
-        // TODO Auto-generated constructor stub
         this.ownerid = ownerid;
         this.password = password;
     }
@@ -45,21 +42,21 @@ public class Owner {
         Property newProperty = new Property(owner, address, eircode, value, loCat, ppr, lastPayment);
         properties.add(newProperty);
     }    
-    
-    /** An accessor for the details of all properties owned by the owner */
+
+    /** A method that prints details of all properties owned by the owner */
     void printPropertyDetails() {
         for(int i = 0; i < properties.size(); i++) {
             System.out.println((i + 1) + ") " + properties.get(i).toStringDetailed());
         }
     }
-    
-    /** An accessor for all properties owned by the owner */
+
+    /** A method that prints all properties owned by the owner */
     void printPropertyList() {
         for(int i = 0; i < properties.size(); i++) {
             System.out.println((i + 1) + ") " + properties.get(i).toString());
         }
     }
-    
+
     /** A method that makes a payment for the owner */
     boolean makePayment(int b) {
         if(properties.get(b - 1).getYearOfLastPayment() != LocalDate.now().getYear()) {
@@ -72,24 +69,24 @@ public class Owner {
         }
         return false;
     }
-    
-    /** An accessor that shows how much is to be paid */
+
+    /** A method that shows how much is to be paid */
     String getPaymentAmount(int b) {
         currentTax = new PropertyTax(properties.get(b - 1));
         currentTax.calcTax();
         return currentTax.toString();
     }
-    
+
     /** A mutator that removes a property from an owner */
     void removePropertyFromOwner(int r) {
         properties.remove(r - 1);
     }
-    
+
     /** A mutator method which changes the value of whether properties are loaded*/
     void setPropertiesLoaded(boolean a) {
         propertiesLoaded = a;
     }
-    
+
     /** An accessor of boolean propertiesLoaded */
     boolean getPropertiesLoaded() {
         return propertiesLoaded;
