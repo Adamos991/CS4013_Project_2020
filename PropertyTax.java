@@ -91,6 +91,6 @@ public class PropertyTax {
     /** An overriden toString() method which returns the total tax*/
     @Override
     public String toString(){
-        return "€" + String.valueOf(totalTax);
+        return String.valueOf(totalTax);
     }
 }
