@@ -9,74 +9,83 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 public class Admin {
-	ArrayList<Owner> listOfOwners = new ArrayList<>();
-	boolean found;
-	int currentOwner;
-	private double paid;
-	private OwnersCSV ownersCSV = new OwnersCSV();
-	private PropertiesCSV propertiesCSV = new PropertiesCSV();
-	private String departmentPassword = "ILoveTheEnvironment69";
-	boolean createOwner(String ownerid, String password) {
-		found = false;
-		for(int i = 0; i < listOfOwners.size(); i++) {
-			if(ownerid == listOfOwners.get(i).getOwnerId()) {
-				found = true;
-			}
-		}
-		if(found == false) {
-			Owner newOwner = new Owner(ownerid, password);
-			listOfOwners.add(newOwner);
-			setCurrentOwner(listOfOwners.size() - 1);
-			ownersCSV.addOwnerToCSV(ownerid, password);
-			createAPaymentsCSV();
-			return true;
-		} else { 
-			return false;
-		}
-	}
-	
-	boolean checkLogin(String ownerid, String password) {
-		for(int i = 0; i < listOfOwners.size(); i++) {
-			if(ownerid.equals(listOfOwners.get(i).getOwnerId())) {
-				//correct ownerid is entered
-				if(password.equals(listOfOwners.get(i).getPassword())) {
-					setCurrentOwner(i);
-					if(listOfOwners.get(i).getPropertiesLoaded() == false) {
-						populatePropertiesOwned();
-						listOfOwners.get(i).setPropertiesLoaded(true);
-					}
-					createAPaymentsCSV();
-					return true;
-				} else {
-					System.out.println("Incorrect password"); //need a better way of doing this
-					return false;
-				}
-			}
-		}
-		return false;
-	}
-	
-	void setCurrentOwner(int a) {
-		currentOwner = a;
-	}
-	
-	Owner getCurrentOwner() {
-		return listOfOwners.get(currentOwner);
-	}
-	
-	void printPropertyDetails() {
-		listOfOwners.get(currentOwner).printPropertyDetails();
-	}
-	
-	void printPropertyList() {
-		listOfOwners.get(currentOwner).printPropertyList();
-	}
-	void registerProperty(String owner, String address, String eircode, double value, String loCat, boolean ppr, int lastPayment) {
-		listOfOwners.get(currentOwner).registerNewProperty(owner, address, eircode, value, loCat, ppr, lastPayment);
-		propertiesCSV.addPropertyToCSV(owner, address, eircode, value, loCat, ppr, lastPayment);
-	}
-	
-	void populatelistOfOwners(){
+    ArrayList<Owner> listOfOwners = new ArrayList<>();
+    boolean found;
+    int currentOwner;
+    private double paid;
+    private OwnersCSV ownersCSV = new OwnersCSV();
+    private PropertiesCSV propertiesCSV = new PropertiesCSV();
+    private String departmentPassword = "ILoveTheEnvironment69";
+    /** A method creating an owner*/
+    boolean createOwner(String ownerid, String password) {
+        found = false;
+        for(int i = 0; i < listOfOwners.size(); i++) {
+            if(ownerid == listOfOwners.get(i).getOwnerId()) {
+                found = true;
+            }
+        }
+        if(found == false) {
+            Owner newOwner = new Owner(ownerid, password);
+            listOfOwners.add(newOwner);
+            setCurrentOwner(listOfOwners.size() - 1);
+            ownersCSV.addOwnerToCSV(ownerid, password);
+            createAPaymentsCSV();
+            return true;
+        } else { 
+            return false;
+        }
+    }
+    
+    /** A method checking if a user exists and if they can log in*/
+    boolean checkLogin(String ownerid, String password) {
+        for(int i = 0; i < listOfOwners.size(); i++) {
+            if(ownerid.equals(listOfOwners.get(i).getOwnerId())) {
+                //correct ownerid is entered
+                if(password.equals(listOfOwners.get(i).getPassword())) {
+                    setCurrentOwner(i);
+                    if(listOfOwners.get(i).getPropertiesLoaded() == false) {
+                        populatePropertiesOwned();
+                        listOfOwners.get(i).setPropertiesLoaded(true);
+                    }
+                    createAPaymentsCSV();
+                    return true;
+                } else {
+                    System.out.println("Incorrect password"); //need a better way of doing this
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /** A mutator method setting the current owner logged in*/
+    void setCurrentOwner(int a) {
+        currentOwner = a;
+    }
+    
+    /** An accessor method returning the current owner logged in*/
+    Owner getCurrentOwner() {
+        return listOfOwners.get(currentOwner);
+    }
+    
+    /** A method printing all property details of the current owner*/
+    void printPropertyDetails() {
+        listOfOwners.get(currentOwner).printPropertyDetails();
+    }
+    
+    /** A method printing the entire property list of an owner*/
+    void printPropertyList() {
+        listOfOwners.get(currentOwner).printPropertyList();
+    }
+    
+    /** A method that registers a property into the CSV files and arraylist*/
+    void registerProperty(String owner, String address, String eircode, double value, String loCat, boolean ppr, int lastPayment) {
+        listOfOwners.get(currentOwner).registerNewProperty(owner, address, eircode, value, loCat, ppr, lastPayment);
+        propertiesCSV.addPropertyToCSV(owner, address, eircode, value, loCat, ppr, lastPayment);
+    }
+
+    /** A method that populates the list of owners from the CSV files on runtime*/
+    void populatelistOfOwners(){
         try{
             BufferedReader br = new BufferedReader(new FileReader("OwnerAccounts.CSV"));
             String line = "";
@@ -95,8 +104,9 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	void populatePropertiesOwned(){
+    
+    /** A method that populates the properties owned after logging in*/
+    void populatePropertiesOwned(){
         try{
             BufferedReader br = new BufferedReader(new FileReader("RegisteredProperties.csv"));
             String line = "";
@@ -115,35 +125,41 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	String getPaymentAmount(int b) {
-		return listOfOwners.get(currentOwner).getPaymentAmount(b);
-	}
-	
-	void makePayment(int b) {
-		if(listOfOwners.get(currentOwner).makePayment(b) != false) {
-			changeDate(listOfOwners.get(currentOwner).accessEircode(b));
-			addPaymentToCSV(listOfOwners.get(currentOwner).getPaymentAmount(b), b);
-			System.out.println("Transaction Successful!");
-		} else {
-			System.out.println("Transaction cancelled: Tax has already been payed this year.");
-		}
-	}
-	
-	void createRegistryOfOwners() {
-		ownersCSV.createARegistryOfOwners();
-	}
-	
-	void createRegistryOfproperties() {
-		propertiesCSV.createARegistryOfProperties();
-	}
-	
-	void removePropertyFromOwner(int r) {
-		propertiesCSV.removeAProperty(listOfOwners.get(currentOwner).accessEircode(r));
-		listOfOwners.get(currentOwner).removePropertyFromOwner(r);
-	}
-	
-	void createAPaymentsCSV(){
+    
+    /** An accessor method that gets the payment amount due*/
+    String getPaymentAmount(int b) {
+        return listOfOwners.get(currentOwner).getPaymentAmount(b);
+    }
+    
+    /** A method which allows an owner to make a payment*/
+    void makePayment(int b) {
+        if(listOfOwners.get(currentOwner).makePayment(b) != false) {
+            changeDate(listOfOwners.get(currentOwner).accessEircode(b));
+            addPaymentToCSV(listOfOwners.get(currentOwner).getPaymentAmount(b), b);
+            System.out.println("Transaction Successful!");
+        } else {
+            System.out.println("Transaction cancelled: Tax has already been payed this year.");
+        }
+    }
+    
+    /** A method that creates a CSV registry of owners*/
+    void createRegistryOfOwners() {
+        ownersCSV.createARegistryOfOwners();
+    }
+    
+    /** A method that creates a registry of properties*/
+    void createRegistryOfproperties() {
+        propertiesCSV.createARegistryOfProperties();
+    }
+    
+    /** A method that removes a property from an owner*/
+    void removePropertyFromOwner(int r) {
+        propertiesCSV.removeAProperty(listOfOwners.get(currentOwner).accessEircode(r));
+        listOfOwners.get(currentOwner).removePropertyFromOwner(r);
+    }
+    
+    /** A method that creates a payment CSV */
+    void createAPaymentsCSV(){
         try{
             File f = new File(getCurrentOwner().getOwnerId()+ "'s payments"+".csv");
             if (f.exists()){
@@ -169,14 +185,15 @@ public class Admin {
             System.out.println("Error");
         }
     }
-	
-	void showHistoryOfPayments(){
+    
+    /** A method that shows history of payments for the current owner*/
+    void showHistoryOfPayments(){
         try{
             BufferedReader br = new BufferedReader(new FileReader(getCurrentOwner().getOwnerId()+ "'s payments"+".csv"));
             String line = "";
             br.readLine();
             while ((line = br.readLine()) != null){
-            System.out.println(line);
+                System.out.println(line);
             }
             br.close();
         }
@@ -187,14 +204,15 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	void showHistoryOfPayments(String ownerid){
+    
+    /** A method that shows history of payments upon entering an ownerid*/
+    void showHistoryOfPayments(String ownerid){
         try{
             BufferedReader br = new BufferedReader(new FileReader(ownerid+ "'s payments"+".csv"));
             String line = "";
             br.readLine();
             while ((line = br.readLine()) != null){
-            System.out.println(line);
+                System.out.println(line);
             }
             br.close();
         }
@@ -205,8 +223,9 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	void showHistoryOfPaymentsPerProperty(int a){
+    
+    /** A method that shows the history of payments based on a particular property */
+    void showHistoryOfPaymentsPerProperty(int a){
         try{
             BufferedReader br = new BufferedReader(new FileReader(getCurrentOwner().getOwnerId()+ "'s payments"+".csv"));
             String line = "";
@@ -214,7 +233,7 @@ public class Admin {
             while ((line = br.readLine()) != null){
                 String[] values = line.split(",");
                 if (values[0].equals(listOfOwners.get(currentOwner).accessEircode(a))){
-                System.out.println(values[0] + "," + values[1] + "," + values[2]);
+                    System.out.println(values[0] + "," + values[1] + "," + values[2]);
                 }
             }
             br.close();
@@ -226,8 +245,9 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	void showHistoryOfPaymentsPerProperty(String ownerid, String eircode){
+    
+    /** a method that shows history of payments per property of an owner in a particular eircode area */
+    void showHistoryOfPaymentsPerProperty(String ownerid, String eircode){
         try{
             BufferedReader br = new BufferedReader(new FileReader(ownerid+ "'s payments"+".csv"));
             String line = "";
@@ -235,7 +255,7 @@ public class Admin {
             while ((line = br.readLine()) != null){
                 String[] values = line.split(",");
                 if (values[1].equals(eircode)){
-                System.out.println(line);
+                    System.out.println(line);
                 }
             }
             br.close();
@@ -247,8 +267,9 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	void showAllPaymentsPerProperty(String eircode){
+    
+    /** A method that shows all payments for a specific property*/
+    void showAllPaymentsPerProperty(String eircode){
         try{
             BufferedReader br = new BufferedReader(new FileReader("RegisteredProperties.csv"));
             String line = "";
@@ -256,7 +277,7 @@ public class Admin {
             while ((line = br.readLine()) != null){
                 String[] values = line.split(",");
                 if (values[2].equalsIgnoreCase(eircode)){
-                	showHistoryOfPaymentsPerProperty(values[0], values[2]);
+                    showHistoryOfPaymentsPerProperty(values[0], values[2]);
                 }
             }
             br.close();
@@ -268,8 +289,9 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	void addPaymentToCSV(String Payment, int b){
+    
+    /** A method that adds payment information to a CSV */
+    void addPaymentToCSV(String Payment, int b){
         try{
             FileWriter File = new FileWriter(getCurrentOwner().getOwnerId()+ "'s payments"+".csv",true);
             BufferedWriter Buffer = new BufferedWriter(File);
@@ -281,9 +303,10 @@ public class Admin {
             System.out.println("Error");
         }
     }
-	
-	void changeDate(String eircode){
-		int overwrittenYear = LocalDate.now().getYear();
+    
+    /** A method that changes the date of last payment after making a payment*/
+    void changeDate(String eircode){
+        int overwrittenYear = LocalDate.now().getYear();
         File inputFile = new File("RegisteredProperties.csv");
         String inputFile1 = "RegisteredProperties.csv";
         File tempFile = new File("InProgress.csv");
@@ -314,8 +337,9 @@ public class Admin {
             System.out.println("IO Exception");
         }
     }
-	
-	void showAllOverDueTaxes(){
+    
+    /** A method that shows all overdue tax*/
+    void showAllOverDueTaxes(){
         try{
             BufferedReader br = new BufferedReader(new FileReader("RegisteredProperties.csv"));
             String line = "";
@@ -337,8 +361,9 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	void showAllOverDueTaxesInAnArea(String firstThreeDigits){
+    
+    /** A method that shows all overdue taxes in a specific area based on the first three digits in the eircode*/
+    void showAllOverDueTaxesInAnArea(String firstThreeDigits){
         try{
             BufferedReader br = new BufferedReader(new FileReader("RegisteredProperties.csv"));
             String line = "";
@@ -360,8 +385,9 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	void showStatisticsOfPropertiesInArea(String firstThree){
+    
+    /** A method that shows statistics of properties in a specific area based on the first three digits in their eircode */
+    void showStatisticsOfPropertiesInArea(String firstThree){
         try{
             BufferedReader br = new BufferedReader(new FileReader("RegisteredProperties.csv"));
             String line = "";
@@ -377,8 +403,8 @@ public class Admin {
                 if (values[2].startsWith(firstThree)){
                     LivingCalculator(values[0], values[2]);
                     if(Integer.parseInt(values[6]) == LocalDate.now().getYear()) {
-                    	totalTaxPaid += paid;
-                    	amountPaidThisYear++;
+                        totalTaxPaid += paid;
+                        amountPaidThisYear++;
                     }
                     amountOfProperties++;
                     if (Integer.parseInt(values[6]) == LocalDate.now().getYear()){
@@ -398,8 +424,9 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	void LivingCalculator(String ownerid, String eircode){
+
+    /** A method that calculates the void showStatisticsOfPropertiesInArea(String firstThree) method*/
+    void LivingCalculator(String ownerid, String eircode){
         try{
             BufferedReader br = new BufferedReader(new FileReader(ownerid+ "'s payments"+".csv"));
             String line = "";
@@ -418,12 +445,13 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-	
-	boolean depOfEnvLogin(String password) {
-		if(password.equals(departmentPassword)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    
+    /** A method to check whether the department of environment's password is correct */
+    boolean depOfEnvLogin(String password) {
+        if(password.equals(departmentPassword)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
