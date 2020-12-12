@@ -1,16 +1,40 @@
 import java.time.LocalDate;
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
+import javafx.scene.control.*;
 public class Owner {
     private String ownerid, password;
     private ArrayList<Property> properties = new ArrayList<>();
+    private ArrayList<String> propertiesString = new ArrayList<>();
     private ArrayList<Payment> payments = new ArrayList<>();
     private PropertyTax currentTax;
     private boolean propertiesLoaded = false;
+    ListView<String> displayList = new ListView<>();
     /**A constructor for the owner */
     public Owner(String ownerid, String password) {
         this.ownerid = ownerid;
         this.password = password;
+    }
+    
+    ListView getDisplayList(){
+        ListView<String> displayList = new ListView<>();
+       for (int i=0; i<properties.size(); i++){
+            displayList.getItems().add(properties.get(i).toString());
+        }
+        return displayList;
+    }
+    
+    ListView getDetailedDisplayList(){
+    ListView<String> displayList = new ListView<>();
+    for (int i=0; i<properties.size(); i++){
+            displayList.getItems().add(properties.get(i).toStringDetailed());
+        }
+     return displayList;
+    }
+    
+    ArrayList getProperties(){
+        return properties;
     }
 
     /**An accessor method for ownerid */
