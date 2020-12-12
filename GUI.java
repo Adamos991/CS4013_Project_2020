@@ -6,11 +6,16 @@ import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
+import javafx.collections.*;
 public class GUI extends Application{
     Stage window;
-    Scene sceneStart, sceneLogin, sceneCreateAccount, sceneDepLogin, userDashboard, scenePropList, scenePropDetails, sceneManageProps, sceneMakePayment;
+    Scene sceneStart, sceneLogin, sceneCreateAccount, sceneDepLogin, userDashboard, scenePropList, scenePropDetails, sceneManageProps, sceneMakePayment,sceneRegProp,sceneRemProp;
     Scene scenePaymentHistory;
     String userId, password;
+    String Address, Eircode, loCat;
+    boolean ppr;
+    int lastYear;
+    double value;
     Admin admin = new Admin();
     @Override
     public void start(Stage primaryStage) {
@@ -173,7 +178,6 @@ public class GUI extends Application{
                 }
             });
 
-
         HBox managePropsArea = new HBox(new Label("Manage Properties: "));
         Button btManageProp = new Button(" ");
         btManageProp.setOnAction(e -> window.setScene(sceneManageProps));
@@ -205,6 +209,125 @@ public class GUI extends Application{
         layoutUserDash.getChildren().add(logoutArea);
 
         userDashboard = new Scene(layoutUserDash, 300, 200);
+
+        VBox manageProperties = new VBox();
+        manageProperties.getChildren().add(new Label("Manage your properties"));
+
+        HBox registerProp = new HBox(new Label("Register Property:"));
+        Button btRegProp = new Button(" ");
+        btRegProp.setOnAction( e -> window.setScene(sceneRegProp));
+        registerProp.getChildren().add(btRegProp);
+        manageProperties.getChildren().add(registerProp);
+
+        HBox removeProp = new HBox(new Label("Remove Property:"));
+        Button btRemProp = new Button(" ");
+        btRemProp.setOnAction( e -> window.setScene(sceneRemProp));
+        removeProp.getChildren().add(btRemProp);
+        manageProperties.getChildren().add(removeProp);
+        btRemProp.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    VBox propListToRemove = new VBox(10);
+                    propListToRemove.getChildren().add(admin.getOurStringProperties());
+                    sceneRemProp = new Scene(propListToRemove,300,200);
+                    HBox ExitListToRemove = new HBox();
+                    Button btExitListToRemove = new Button(" Cancel ");
+                    Button btRemoveProp = new Button(" Remove ");
+                    HBox typeInEircode = new HBox(new Label("Eircode of property you want to remove:"));
+                    TextField eircodeGetter = new TextField();
+                    typeInEircode.getChildren().add(eircodeGetter);
+                    propListToRemove.getChildren().add(typeInEircode);
+                    ExitListToRemove.getChildren().add(btRemoveProp);
+                    ExitListToRemove.getChildren().add(btExitListToRemove);
+                    propListToRemove.getChildren().add(ExitListToRemove);
+                    btExitListToRemove.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                window.setScene(sceneManageProps);
+                            }
+                        });
+                    btRemoveProp.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                String eircode = eircodeGetter.getText();
+                                for (int i=0; i<admin.getPropertiesOfCurrentOwner().size(); i++){
+                                    System.out.println("We're inside");
+                                    if (eircode.equals(admin.getEircodeOfCurrentOwner(i))){
+                                        System.out.println("We are removing");
+                                        admin.removePropertyFromOwnerReal(i);
+                                    }
+                                }
+                                window.setScene(sceneManageProps);
+                            }
+                        });
+                    window.setScene(sceneRemProp);
+                }
+            });
+
+        HBox ExitProp = new HBox(new Label("Exit:"));
+        Button btExitProp = new Button(" ");
+        btExitProp.setOnAction( e -> window.setScene(userDashboard));
+        ExitProp.getChildren().add(btExitProp);
+        manageProperties.getChildren().add(ExitProp);
+
+        sceneManageProps = new Scene(manageProperties,300,200);
+        //Register a property
+        VBox layoutRegisterProperties = new VBox();
+        layoutRegisterProperties.getChildren().add(new Label("Enter your property details below:"));
+
+        HBox PropertyAddressArea = new HBox(new Label("Enter Property Address: "));
+        TextField PropertyAddressField = new TextField();
+        PropertyAddressArea.getChildren().add(PropertyAddressField);
+        layoutRegisterProperties.getChildren().add(PropertyAddressArea); 
+
+        HBox eircodeArea = new HBox(new Label("Enter Eircode: "));
+        TextField eircodeField = new TextField();
+        eircodeArea.getChildren().add(eircodeField);
+        layoutRegisterProperties.getChildren().add(eircodeArea);
+
+        HBox valueArea = new HBox(new Label("Enter Property Value: "));
+        TextField valueField = new TextField();
+        valueArea.getChildren().add(valueField);
+        layoutRegisterProperties.getChildren().add(valueArea);
+
+        HBox loCatArea = new HBox(new Label("Enter Property Location Category(City, Large Town, Small Town, Village, Countryside: "));
+        TextField loCatField = new TextField();
+        loCatArea.getChildren().add(loCatField);
+        layoutRegisterProperties.getChildren().add(loCatArea);
+
+        HBox pprArea = new HBox(new Label("Is the property your Principal Private Residence? True/False: "));
+        TextField pprField = new TextField();
+        pprArea.getChildren().add(pprField);
+        layoutRegisterProperties.getChildren().add(pprArea);
+
+        HBox lastYearArea = new HBox(new Label("Enter the last year you paid tax on the property: "));
+        TextField lastYearField = new TextField();
+        lastYearArea.getChildren().add(lastYearField);
+        layoutRegisterProperties.getChildren().add(lastYearArea);
+
+        HBox RegisterButtons = new HBox();
+        Button btRegister = new Button("Register");
+        RegisterButtons.getChildren().add(btRegister);
+        Button btbackToManageProperties = new Button("Back");
+        RegisterButtons.getChildren().add(btbackToManageProperties);
+        btbackToManageProperties.setOnAction( e -> window.setScene(sceneManageProps));
+        layoutRegisterProperties.getChildren().add(RegisterButtons);
+
+        sceneRegProp =  new Scene(layoutRegisterProperties,300,200);
+
+        btRegister.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Address = PropertyAddressField.getText();
+                    Eircode= eircodeField.getText();
+                    value = Double.parseDouble(valueField.getText());
+                    loCat = loCatField.getText();
+                    ppr = Boolean.parseBoolean(pprField.getText());
+                    lastYear = Integer.parseInt(lastYearField.getText());
+                    admin.registerProperty(admin.getCurrentOwner().getOwnerId(), Address, Eircode, value, loCat, ppr, lastYear);
+                    window.setScene(userDashboard);
+                }
+            });
 
         primaryStage.setTitle("CS4013 Project");
         primaryStage.setScene(sceneStart);
