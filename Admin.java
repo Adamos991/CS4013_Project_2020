@@ -72,6 +72,14 @@ public class Admin{
         return listOfOwners.get(currentOwner).getDetailedDisplayList();
     }
     
+    String getEircodeOfCurrentOwner(int r){
+    return listOfOwners.get(currentOwner).accessEircodeReal(r);
+    }
+    
+    ArrayList getPropertiesOfCurrentOwner(){
+    return listOfOwners.get(currentOwner).getOwnerProperties();
+    }
+    
     /** An accessor method returning the current owner logged in*/
     Owner getCurrentOwner() {
         return listOfOwners.get(currentOwner);
@@ -166,7 +174,12 @@ public class Admin{
         propertiesCSV.removeAProperty(listOfOwners.get(currentOwner).accessEircode(r));
         listOfOwners.get(currentOwner).removePropertyFromOwner(r);
     }
-
+    
+    void removePropertyFromOwnerReal(int r) {
+        propertiesCSV.removeAProperty(listOfOwners.get(currentOwner).accessEircodeReal(r));
+        listOfOwners.get(currentOwner).removePropertyFromOwnerReal(r);
+    }
+    
     /** A method that creates a payment CSV */
     void createAPaymentsCSV(){
         try{
