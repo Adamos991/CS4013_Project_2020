@@ -12,6 +12,7 @@ public class CLI {
         in = new Scanner(System.in);
         admin = new Admin();
     }
+
     /** A method that allows you to run the cli and perform all owner tasks */
     public void runCLI() {
         admin.createRegistryOfOwners();
@@ -80,7 +81,7 @@ public class CLI {
                         in = new Scanner(System.in);
                         System.out.print("Enter property location category (City, Large town, Small town, Village, Countryside): ");
                         loCat = in.nextLine();
-                        System.out.print("Is the property you Principle Private Residence? True/False: ");
+                        System.out.print("Is the property your Principal Private Residence? True/False: ");
                         in = new Scanner(System.in);
                         ppr = in.nextBoolean();
                         System.out.print("Enter the year of the last tax payment made on the property: ");
@@ -92,10 +93,12 @@ public class CLI {
                         in = new Scanner(System.in);
                         //Ask for property details
                         //Remove the property
-                        System.out.println("Select a property to remove!");
+                        System.out.println("Select a property to remove!(0 to cancel)");
                         admin.printPropertyList();
                         command = in.nextInt();
-                        admin.removePropertyFromOwner(command);
+                        if (command !=0){
+                            admin.removePropertyFromOwner(command);
+                        }
                     } else {
                         //return to menu
                     }
@@ -131,6 +134,7 @@ public class CLI {
             }
         }
     }
+
     /** A method that allows you to perform department of environment tasks*/
     void depOfEnvironment() {
         boolean exitDep = false, loggedInDep = false;
@@ -190,7 +194,7 @@ public class CLI {
             }
         }
     }
-    
+
     /** A method that removes spaces from eircodes incase users put them in */
     String removeSpace(String eircode) {
         String[] values = eircode.split(" ");
@@ -200,5 +204,5 @@ public class CLI {
         }
         return newEircode;
     }
-    
+
 }
