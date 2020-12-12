@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.io.*;
+import java.util.*;
 public class Owner {
     private String ownerid, password;
     private ArrayList<Property> properties = new ArrayList<>();
