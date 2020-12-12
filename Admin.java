@@ -8,7 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
-public class Admin {
+import javafx.scene.control.*;
+public class Admin{
     ArrayList<Owner> listOfOwners = new ArrayList<>();
     boolean found;
     int currentOwner;
@@ -35,7 +36,7 @@ public class Admin {
             return false;
         }
     }
-    
+
     /** A method checking if a user exists and if they can log in*/
     boolean checkLogin(String ownerid, String password) {
         for(int i = 0; i < listOfOwners.size(); i++) {
@@ -57,27 +58,35 @@ public class Admin {
         }
         return false;
     }
-    
+
     /** A mutator method setting the current owner logged in*/
     void setCurrentOwner(int a) {
         currentOwner = a;
+    }
+    
+    ListView getOurStringProperties(){
+        return listOfOwners.get(currentOwner).getDisplayList();
+    }
+    
+    ListView getOurStringPropertiesDetailed(){
+        return listOfOwners.get(currentOwner).getDetailedDisplayList();
     }
     
     /** An accessor method returning the current owner logged in*/
     Owner getCurrentOwner() {
         return listOfOwners.get(currentOwner);
     }
-    
+
     /** A method printing all property details of the current owner*/
     void printPropertyDetails() {
         listOfOwners.get(currentOwner).printPropertyDetails();
     }
-    
+
     /** A method printing the entire property list of an owner*/
     void printPropertyList() {
         listOfOwners.get(currentOwner).printPropertyList();
     }
-    
+
     /** A method that registers a property into the CSV files and arraylist*/
     void registerProperty(String owner, String address, String eircode, double value, String loCat, boolean ppr, int lastPayment) {
         listOfOwners.get(currentOwner).registerNewProperty(owner, address, eircode, value, loCat, ppr, lastPayment);
@@ -104,7 +113,7 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-    
+
     /** A method that populates the properties owned after logging in*/
     void populatePropertiesOwned(){
         try{
@@ -125,12 +134,12 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-    
+
     /** An accessor method that gets the payment amount due*/
     String getPaymentAmount(int b) {
         return listOfOwners.get(currentOwner).getPaymentAmount(b);
     }
-    
+
     /** A method which allows an owner to make a payment*/
     void makePayment(int b) {
         if(listOfOwners.get(currentOwner).makePayment(b) != false) {
@@ -141,23 +150,23 @@ public class Admin {
             System.out.println("Transaction cancelled: Tax has already been payed this year.");
         }
     }
-    
+
     /** A method that creates a CSV registry of owners*/
     void createRegistryOfOwners() {
         ownersCSV.createARegistryOfOwners();
     }
-    
+
     /** A method that creates a registry of properties*/
     void createRegistryOfproperties() {
         propertiesCSV.createARegistryOfProperties();
     }
-    
+
     /** A method that removes a property from an owner*/
     void removePropertyFromOwner(int r) {
         propertiesCSV.removeAProperty(listOfOwners.get(currentOwner).accessEircode(r));
         listOfOwners.get(currentOwner).removePropertyFromOwner(r);
     }
-    
+
     /** A method that creates a payment CSV */
     void createAPaymentsCSV(){
         try{
@@ -185,7 +194,7 @@ public class Admin {
             System.out.println("Error");
         }
     }
-    
+
     /** A method that shows history of payments for the current owner*/
     void showHistoryOfPayments(){
         try{
@@ -204,7 +213,7 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-    
+
     /** A method that shows history of payments upon entering an ownerid*/
     void showHistoryOfPayments(String ownerid){
         try{
@@ -223,7 +232,7 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-    
+
     /** A method that shows the history of payments based on a particular property */
     void showHistoryOfPaymentsPerProperty(int a){
         try{
@@ -245,7 +254,7 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-    
+
     /** a method that shows history of payments per property of an owner in a particular eircode area */
     void showHistoryOfPaymentsPerProperty(String ownerid, String eircode){
         try{
@@ -267,7 +276,7 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-    
+
     /** A method that shows all payments for a specific property*/
     void showAllPaymentsPerProperty(String eircode){
         try{
@@ -289,7 +298,7 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-    
+
     /** A method that adds payment information to a CSV */
     void addPaymentToCSV(String Payment, int b){
         try{
@@ -303,7 +312,7 @@ public class Admin {
             System.out.println("Error");
         }
     }
-    
+
     /** A method that changes the date of last payment after making a payment*/
     void changeDate(String eircode){
         int overwrittenYear = LocalDate.now().getYear();
@@ -337,7 +346,7 @@ public class Admin {
             System.out.println("IO Exception");
         }
     }
-    
+
     /** A method that shows all overdue tax*/
     void showAllOverDueTaxes(){
         try{
@@ -361,7 +370,7 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-    
+
     /** A method that shows all overdue taxes in a specific area based on the first three digits in the eircode*/
     void showAllOverDueTaxesInAnArea(String firstThreeDigits){
         try{
@@ -385,7 +394,7 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-    
+
     /** A method that shows statistics of properties in a specific area based on the first three digits in their eircode */
     void showStatisticsOfPropertiesInArea(String firstThree){
         try{
@@ -445,7 +454,7 @@ public class Admin {
             System.out.println("IO exception");
         }
     }
-    
+
     /** A method to check whether the department of environment's password is correct */
     boolean depOfEnvLogin(String password) {
         if(password.equals(departmentPassword)) {
