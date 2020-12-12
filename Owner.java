@@ -10,7 +10,6 @@ public class Owner {
     private ArrayList<Payment> payments = new ArrayList<>();
     private PropertyTax currentTax;
     private boolean propertiesLoaded = false;
-    ListView<String> displayList = new ListView<>();
     /**A constructor for the owner */
     public Owner(String ownerid, String password) {
         this.ownerid = ownerid;
@@ -23,6 +22,10 @@ public class Owner {
             displayList.getItems().add(properties.get(i).toString());
         }
         return displayList;
+    }
+    
+    ArrayList getOwnerProperties(){
+    return properties;
     }
     
     ListView getDetailedDisplayList(){
@@ -60,6 +63,10 @@ public class Owner {
     /**An accessor for the eircode for a particular property owned by the owner */
     String accessEircode(int r) {
         return properties.get(r - 1).getEircode();
+    }
+    
+    String accessEircodeReal(int r) {
+        return properties.get(r).getEircode();
     }
 
     /** A mutator for the properties owned by the owner, allows the owner to input a new property */
@@ -105,6 +112,10 @@ public class Owner {
     /** A mutator that removes a property from an owner */
     void removePropertyFromOwner(int r) {
         properties.remove(r - 1);
+    }
+    
+    void removePropertyFromOwnerReal(int r) {
+        properties.remove(r);
     }
 
     /** A mutator method which changes the value of whether properties are loaded*/
