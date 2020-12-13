@@ -9,8 +9,8 @@ import javafx.scene.control.*;
 import javafx.collections.*;
 public class GUI extends Application{
     Stage window;
-    Scene sceneStart, sceneLogin, sceneCreateAccount, sceneDepLogin, userDashboard, scenePropList, scenePropDetails, sceneManageProps, sceneMakePayment,sceneRegProp,sceneRemProp;
-    Scene scenePaymentHistory;
+    Scene sceneStart, sceneLogin, sceneCreateAccount, sceneDepLogin, userDashboard, scenePropList, scenePropDetails, sceneManageProps, sceneMakePayment,sceneRegProp,sceneRemProp,sceneMakingPayment;
+    Scene scenePaymentHistory, sceneOverAllPayments, scenePPPayments;
     String userId, password;
     String Address, Eircode, loCat;
     boolean ppr;
@@ -129,6 +129,7 @@ public class GUI extends Application{
         VBox layoutUserDash = new VBox();
         layoutUserDash.getChildren().add(new Label("Welcome to the user dashboard"));
 
+        Label success = new Label("");
         HBox propListArea = new HBox(new Label("View Property List: "));
         Button btPropList = new Button(" ");
         btPropList.setOnAction(e -> window.setScene(scenePropList));
@@ -137,7 +138,7 @@ public class GUI extends Application{
         btPropList.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    VBox propList = new VBox(10);
+                    VBox propList = new VBox();
                     propList.getChildren().add(admin.getOurStringProperties());
                     scenePropList = new Scene(propList,300,200);
                     HBox ExitList = new HBox(new Label("Exit "));
@@ -189,12 +190,162 @@ public class GUI extends Application{
         btMakePayment.setOnAction(e -> window.setScene(sceneMakePayment));
         makePaymentArea.getChildren().add(btMakePayment);
         layoutUserDash.getChildren().add(makePaymentArea);
+        btMakePayment.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    VBox propsListAgain = new VBox();
+                    propsListAgain.getChildren().add(admin.getOurStringPropertiesDetailed());
+                    sceneMakePayment = new Scene(propsListAgain,300,200);
+                    HBox TypeEircodeOfPayment = new HBox(new Label("Type Eircode of Property to make payment on: "));
+                    TextField eircodeGetterPay = new TextField();
+                    propsListAgain.getChildren().add(TypeEircodeOfPayment);
+                    HBox ExitListDetailed = new HBox();
+                    Button btMakePayment = new Button ("Make payment");
+                    ExitListDetailed.getChildren().add(btMakePayment);
+                    Button btExitListDetailed = new Button("Exit");
+                    ExitListDetailed.getChildren().add(btExitListDetailed);
+                    TypeEircodeOfPayment.getChildren().add(eircodeGetterPay);
+                    propsListAgain.getChildren().add(ExitListDetailed);
+                    HBox checker = new HBox();
+                    Label status = new Label();
+                    checker.getChildren().add(status);
+                    propsListAgain.getChildren().add(checker);
+                    btExitListDetailed.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                window.setScene(userDashboard);
+                            }
+                        });
+                    btMakePayment.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                String eircode = eircodeGetterPay.getText();
+                                eircode = admin.removeSpace(eircode);
+                                for (int i=0; i<admin.getPropertiesOfCurrentOwner().size(); i++){
+                                    if (eircode.equalsIgnoreCase(admin.getEircodeOfCurrentOwner(i))){
+                                        VBox InsidePayment = new VBox();
+                                        InsidePayment.getChildren().add(new Label(admin.getPaymentAmountReal(i)));
+                                        HBox CreditCardDetails = new HBox(new Label("Enter Credit Card Details"));
+                                        TextField CreditCardDeets = new TextField();
+                                        CreditCardDetails.getChildren().add(CreditCardDeets);
+                                        InsidePayment.getChildren().add(CreditCardDetails);
+                                        Button btEnter = new Button("Enter");
+                                        InsidePayment.getChildren().add(btEnter);
+                                        sceneMakingPayment = new Scene(InsidePayment,300,200);
+                                        int currentProperty = i;
+                                        btEnter.setOnAction(new EventHandler<ActionEvent>() {
+                                                @Override
+                                                public void handle(ActionEvent event) {
+                                                    admin.makePaymentReal(currentProperty);
+                                                    success.setText(admin.getSuccess());
+                                                    window.setScene(userDashboard);                                 
+                                                }
+                                            });
+                                        window.setScene(sceneMakingPayment);
+                                        status.setText("");
+                                        break;
+                                    } 
+                                    status.setText("Invalid eircode");
+                                }                                
+                            }
+                        });
+                    window.setScene(sceneMakePayment);
+                }
+            });
 
         HBox paymentHistArea = new HBox(new Label("View Payment History: "));
         Button btPaymentHist = new Button(" ");
         btPaymentHist.setOnAction(e -> window.setScene(scenePaymentHistory));
         paymentHistArea.getChildren().add(btPaymentHist);
         layoutUserDash.getChildren().add(paymentHistArea);
+        btPaymentHist.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    VBox InsidePaymentsHistory = new VBox();
+                    InsidePaymentsHistory.getChildren().add(new Label("Options: "));
+
+                    HBox PaymentHistoryForProperty = new HBox(new Label("View Payment History for a property: "));
+                    Button btPaymentHistoryForProperty = new Button(" ");
+                    PaymentHistoryForProperty.getChildren().add(btPaymentHistoryForProperty);
+                    InsidePaymentsHistory.getChildren().add(PaymentHistoryForProperty);
+                    btPaymentHistoryForProperty.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                VBox LeHistoirePP = new VBox();
+
+                                LeHistoirePP.getChildren().add(admin.getOurStringProperties());
+
+                                HBox TypeEircodeOfPaymentsYouWant = new HBox(new Label("Type Eircode of Property to view payments on: "));
+                                TextField eircodeGetterPayment = new TextField();
+                                TypeEircodeOfPaymentsYouWant.getChildren().add(eircodeGetterPayment);
+                                LeHistoirePP.getChildren().add(TypeEircodeOfPaymentsYouWant);
+
+                                HBox AnotherExitButton = new HBox();
+                                Button check = new Button("Check");
+                                Button ExitNow = new Button("Exit");
+                                AnotherExitButton.getChildren().add(check);
+                                AnotherExitButton.getChildren().add(ExitNow);
+                                ExitNow.setOnAction(e -> window.setScene(sceneLogin));
+                                LeHistoirePP.getChildren().add(AnotherExitButton);
+                                //check.setOnAction(new EventHandler<ActionEvent>() {
+                                  //      @Override
+                                  //      public void handle(ActionEvent event) {
+                                  //          VBox InsideLeHistoirePP = new VBox();
+
+                                  //          InsideLeHistoirePP.getChildren().add(admin.showHistoryOfPaymentsPerPropertyGUI());
+
+                                  //          HBox AnotherExitButton = new HBox();
+                                  //          Button ExitNow = new Button("Exit");
+                                  //          AnotherExitButton.getChildren().add(ExitNow);
+                                  //          ExitNow.setOnAction(e -> window.setScene(sceneLogin));
+                                  //          LeHistoirePP.getChildren().add(AnotherExitButton);
+
+                                  //          sceneOverAllPayments = new Scene(LeHistoirePP,300,200);
+                                  //          window.setScene(sceneOverAllPayments);
+                                  //      }                        
+                                  //  });
+
+                                scenePPPayments = new Scene(LeHistoirePP,300,200);
+                                window.setScene(scenePPPayments);
+                            }
+                        });
+
+                    HBox OverallPaymentHistory = new HBox(new Label("View OverallPaymentHistory: "));
+                    Button btOverallPaymentHistory = new Button(" ");
+                    OverallPaymentHistory.getChildren().add(btOverallPaymentHistory);
+                    InsidePaymentsHistory.getChildren().add(OverallPaymentHistory);
+                    btOverallPaymentHistory.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                VBox LeHistoire = new VBox();
+
+                                LeHistoire.getChildren().add(admin.showHistoryOfPaymentsGUI());
+
+                                HBox AnotherExitButton = new HBox();
+                                Button ExitNow = new Button("Exit");
+                                AnotherExitButton.getChildren().add(ExitNow);
+                                ExitNow.setOnAction(e -> window.setScene(sceneLogin));
+                                LeHistoire.getChildren().add(AnotherExitButton);
+
+                                sceneOverAllPayments = new Scene(LeHistoire,300,200);
+                                window.setScene(sceneOverAllPayments);
+                            }
+                        });
+                    HBox goBackMan = new HBox(new Label("Back"));
+                    Button btgoBackMan = new Button(" ");
+                    goBackMan.getChildren().add(btgoBackMan);
+                    InsidePaymentsHistory.getChildren().add(goBackMan);
+                    btgoBackMan.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                window.setScene(userDashboard);                                 
+                            }
+                        });
+
+                    scenePaymentHistory = new Scene(InsidePaymentsHistory,300,200);        
+                    window.setScene(scenePaymentHistory);
+                }
+            });
 
         HBox logoutArea = new HBox(new Label("Logout: "));
         Button btLogout = new Button(" ");
@@ -208,6 +359,9 @@ public class GUI extends Application{
         logoutArea.getChildren().add(btLogout);
         layoutUserDash.getChildren().add(logoutArea);
 
+        HBox successornay = new HBox();
+        successornay.getChildren().add(success);
+        layoutUserDash.getChildren().add(successornay);
         userDashboard = new Scene(layoutUserDash, 300, 200);
 
         VBox manageProperties = new VBox();
@@ -227,7 +381,7 @@ public class GUI extends Application{
         btRemProp.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    VBox propListToRemove = new VBox(10);
+                    VBox propListToRemove = new VBox();
                     propListToRemove.getChildren().add(admin.getOurStringProperties());
                     sceneRemProp = new Scene(propListToRemove,300,200);
                     HBox ExitListToRemove = new HBox();
@@ -250,10 +404,9 @@ public class GUI extends Application{
                             @Override
                             public void handle(ActionEvent event) {
                                 String eircode = eircodeGetter.getText();
+                                eircode = admin.removeSpace(eircode);
                                 for (int i=0; i<admin.getPropertiesOfCurrentOwner().size(); i++){
-                                    System.out.println("We're inside");
-                                    if (eircode.equals(admin.getEircodeOfCurrentOwner(i))){
-                                        System.out.println("We are removing");
+                                    if (eircode.equalsIgnoreCase(admin.getEircodeOfCurrentOwner(i))){
                                         admin.removePropertyFromOwnerReal(i);
                                     }
                                 }
@@ -320,6 +473,7 @@ public class GUI extends Application{
                 public void handle(ActionEvent event) {
                     Address = PropertyAddressField.getText();
                     Eircode= eircodeField.getText();
+                    Eircode = admin.removeSpace(Eircode);
                     value = Double.parseDouble(valueField.getText());
                     loCat = loCatField.getText();
                     ppr = Boolean.parseBoolean(pprField.getText());
