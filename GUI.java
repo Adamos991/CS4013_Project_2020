@@ -287,23 +287,23 @@ public class GUI extends Application{
                                 AnotherExitButton.getChildren().add(ExitNow);
                                 ExitNow.setOnAction(e -> window.setScene(sceneLogin));
                                 LeHistoirePP.getChildren().add(AnotherExitButton);
-                                //check.setOnAction(new EventHandler<ActionEvent>() {
-                                  //      @Override
-                                  //      public void handle(ActionEvent event) {
-                                  //          VBox InsideLeHistoirePP = new VBox();
+                                check.setOnAction(new EventHandler<ActionEvent>() {
+                                        @Override
+                                        public void handle(ActionEvent event) {
+                                            VBox InsideLeHistoirePP = new VBox();
+                                            String eircode = eircodeGetterPayment.getText();
+                                            InsideLeHistoirePP.getChildren().add(admin.showHistoryOfPaymentsPerPropertyGUI(eircode));
 
-                                  //          InsideLeHistoirePP.getChildren().add(admin.showHistoryOfPaymentsPerPropertyGUI());
+                                            HBox AnotherExitButton = new HBox();
+                                            Button ExitNow = new Button("Exit");
+                                            AnotherExitButton.getChildren().add(ExitNow);
+                                            ExitNow.setOnAction(e -> window.setScene(scenePPPayments));
+                                            InsideLeHistoirePP.getChildren().add(AnotherExitButton);
 
-                                  //          HBox AnotherExitButton = new HBox();
-                                  //          Button ExitNow = new Button("Exit");
-                                  //          AnotherExitButton.getChildren().add(ExitNow);
-                                  //          ExitNow.setOnAction(e -> window.setScene(sceneLogin));
-                                  //          LeHistoirePP.getChildren().add(AnotherExitButton);
-
-                                  //          sceneOverAllPayments = new Scene(LeHistoirePP,300,200);
-                                  //          window.setScene(sceneOverAllPayments);
-                                  //      }                        
-                                  //  });
+                                            sceneOverAllPayments = new Scene(InsideLeHistoirePP,300,200);
+                                            window.setScene(sceneOverAllPayments);
+                                        }                        
+                                    });
 
                                 scenePPPayments = new Scene(LeHistoirePP,300,200);
                                 window.setScene(scenePPPayments);
