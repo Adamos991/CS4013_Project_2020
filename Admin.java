@@ -13,7 +13,9 @@ public class Admin{
     ArrayList<Owner> listOfOwners = new ArrayList<>();
     boolean found;
     int currentOwner;
+    String Success = "";
     private double paid;
+    String temp;
     private OwnersCSV ownersCSV = new OwnersCSV();
     private PropertiesCSV propertiesCSV = new PropertiesCSV();
     private String departmentPassword = "ILoveTheEnvironment69";
@@ -58,27 +60,37 @@ public class Admin{
         }
         return false;
     }
+    /////////////////////////////////////Start
+    String getSuccess(){
+        return Success;
+    }
+    ////////////////////////////////////End
 
     /** A mutator method setting the current owner logged in*/
     void setCurrentOwner(int a) {
         currentOwner = a;
     }
-    
+    ///////////////////////////////////Start
     ListView getOurStringProperties(){
         return listOfOwners.get(currentOwner).getDisplayList();
     }
-    
+
     ListView getOurStringPropertiesDetailed(){
         return listOfOwners.get(currentOwner).getDetailedDisplayList();
     }
-    
+
+    ListView getOwnerPaymentDetails(){
+        return listOfOwners.get(currentOwner).getDiplayListOfPayments();
+    }
+
     String getEircodeOfCurrentOwner(int r){
-    return listOfOwners.get(currentOwner).accessEircodeReal(r);
+        return listOfOwners.get(currentOwner).accessEircodeReal(r);
     }
-    
+
     ArrayList getPropertiesOfCurrentOwner(){
-    return listOfOwners.get(currentOwner).getOwnerProperties();
+        return listOfOwners.get(currentOwner).getOwnerProperties();
     }
+    /////////////////////////////////////End
     
     /** An accessor method returning the current owner logged in*/
     Owner getCurrentOwner() {
@@ -147,18 +159,35 @@ public class Admin{
     String getPaymentAmount(int b) {
         return listOfOwners.get(currentOwner).getPaymentAmount(b);
     }
-
+    
+    /////////////////////////////Start
+    String getPaymentAmountReal(int b) {
+        return listOfOwners.get(currentOwner).getPaymentAmountReal(b);
+    }
+    //////////////////////////////END
+    
     /** A method which allows an owner to make a payment*/
     void makePayment(int b) {
         if(listOfOwners.get(currentOwner).makePayment(b) != false) {
             changeDate(listOfOwners.get(currentOwner).accessEircode(b));
             addPaymentToCSV(listOfOwners.get(currentOwner).getPaymentAmount(b), b);
-            System.out.println("Transaction Successful!");
+            System.out.println("Success");
         } else {
             System.out.println("Transaction cancelled: Tax has already been payed this year.");
         }
     }
 
+    ////////////////////////////Start
+    void makePaymentReal(int b) {
+        if(listOfOwners.get(currentOwner).makePaymentReal(b) != false) {
+            changeDate(listOfOwners.get(currentOwner).accessEircodeReal(b));
+            addPaymentToCSV(listOfOwners.get(currentOwner).getPaymentAmountReal(b), b);
+            Success = "Transaction Complete";
+        } else {
+            Success = "Transaction cancelled: Tax has already been payed this year.";
+        }
+    }
+    /////////////////////////////End
     /** A method that creates a CSV registry of owners*/
     void createRegistryOfOwners() {
         ownersCSV.createARegistryOfOwners();
@@ -175,10 +204,12 @@ public class Admin{
         listOfOwners.get(currentOwner).removePropertyFromOwner(r);
     }
     
+    ////////////////////////Start
     void removePropertyFromOwnerReal(int r) {
         propertiesCSV.removeAProperty(listOfOwners.get(currentOwner).accessEircodeReal(r));
         listOfOwners.get(currentOwner).removePropertyFromOwnerReal(r);
     }
+    //////////////////////END
     
     /** A method that creates a payment CSV */
     void createAPaymentsCSV(){
@@ -226,7 +257,29 @@ public class Admin{
             System.out.println("IO exception");
         }
     }
-
+    //////////Start
+    ListView showHistoryOfPaymentsGUI(){
+        ListView<String> PaymentsList = new ListView<>();
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(getCurrentOwner().getOwnerId()+ "'s payments"+".csv"));
+            String line = "";
+            br.readLine();
+            while ((line = br.readLine()) != null){
+                PaymentsList.getItems().add(line);            
+            }
+            br.close();
+        }
+        catch (FileNotFoundException e){
+            System.out.println("Could not find payments, WTF!!!");
+        }
+        catch(IOException e){
+            System.out.println("IO exception");
+        }
+        return PaymentsList;
+    }
+    //////////////End
+    
+    
     /** A method that shows history of payments upon entering an ownerid*/
     void showHistoryOfPayments(String ownerid){
         try{
@@ -267,7 +320,41 @@ public class Admin{
             System.out.println("IO exception");
         }
     }
-
+    
+    ////////////////////Start
+    ListView<String> showHistoryOfPaymentsPerPropertyGUI(String eircode){
+        ListView<String> displayList = new ListView<>();
+        found = false;
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(getCurrentOwner().getOwnerId()+ "'s payments"+".csv"));
+            String line = "";
+            br.readLine();
+            while ((line = br.readLine()) != null){
+                String[] values = line.split(",");
+                if (values[1].equals(eircode)){
+                    temp = values[0] + "," + values[1] + "," + values[2] + "," + values[3];
+                    displayList.getItems().add(temp);
+                    found = true;
+                }
+            }
+            br.close();
+            return displayList;
+        }
+        catch (FileNotFoundException e){
+            System.out.println("Could not find payments, WTF!!!");
+        }
+        catch(IOException e){
+            System.out.println("IO exception");
+        }
+        if(found == false) {
+            displayList.getItems().add("No payments were found for that eircode.");
+            return displayList;
+        }
+        return null;
+    }
+    //////End
+    
+    
     /** a method that shows history of payments per property of an owner in a particular eircode area */
     void showHistoryOfPaymentsPerProperty(String ownerid, String eircode){
         try{
@@ -475,5 +562,15 @@ public class Admin{
         } else {
             return false;
         }
+    }
+
+    /** A method that removes spaces from eircodes incase users put them in */
+    String removeSpace(String eircode) {
+        String[] values = eircode.split(" ");
+        String newEircode = "";
+        for(int i = 0; i < values.length; i++) {
+            newEircode += values[i];
+        }
+        return newEircode;
     }
 }
