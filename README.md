@@ -10,12 +10,15 @@ Or you can just compile it and run it on any IDE.
 Owners:
 UserID: Adam1234
 Password: ILoveJava69
+(Taxes all up to date)
 
 UserID: Bartiboi420xD
 Password: Tutu
+(All taxes overdue)
 
 UserID: Jim
 Password: 1234
+(His taxes are a mix)
 
 DepOfEnvironment Password: ILoveTheEnvironment69
 
