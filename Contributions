@@ -1,0 +1,25 @@
+Contributions:
+
+Design:
+The four of us worked on the design within a discord call for basically a whole day, wondering how we were going to do this. 
+We all contributed equally to the design side of things and we ended up with CRC Cards and a UML diagram that was very similar, although
+not 100% the same as the final product. We all contributed to the conversation while Gabriel wrote the CRC Cards on a live stream and 
+Padraig drew our UML diagram.
+
+Coding:
+While we all had different roles to play a part on, we all also largely contributed to every class and every part of the code, from 
+actually writing it, to then reviewing it and editing it if we found mistakes, to the point where we all agreed that it was simply unfair
+to actually give our different classes and methods an author, and upon trying to do so we realized we were just making up authors that
+simply did not make sense. Our initial roles however included Adam getting the Owner to coopertae with the Property, in order to then cooperate
+with the PropertyTax. Bart's role was to store all of these in CSV files, then be able to read from these CSV files and write to these CSV
+files. Padraig's role was to make the code cooperate with the CLI, while Gabe had to make it cooperate with the GUI, but we all did
+bits and pieces of code in each of these roles and didn't really stick to them, and we also found that it worked very well as our
+final product turned out pretty good.
+
+Documentation:
+We documented everything using JavaDocs at the very end, once again hopping into a call and just giving each other classes to 
+write documents on. We all understood each part of the code as we all worked on it together so it didn't matter who got which class.
+
+Testing:
+We tested everything along the way, we didn't really run specific tests but rather just ran our program and saw whether it worked, if it did
+we were happy, and if it didn't then we fixed it.
